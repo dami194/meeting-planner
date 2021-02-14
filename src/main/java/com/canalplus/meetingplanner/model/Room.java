@@ -1,0 +1,34 @@
+package com.canalplus.meetingplanner.model;
+
+import java.util.Arrays;
+import java.util.LinkedHashMap;
+import java.util.Map;
+
+public class Room {
+    private String name;
+    private int capacity;
+    private Map<TimeSlot, Boolean> timeSlotToBookStatus;
+
+    public Room(String name, int capacity) {
+        this.name = name;
+        this.capacity = capacity;
+        timeSlotToBookStatus = new LinkedHashMap<>();
+        Arrays.stream(TimeSlot.values()).forEach(timeSlot -> timeSlotToBookStatus.put(timeSlot, false));
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public int getCapacity() {
+        return capacity;
+    }
+
+    public boolean isBookedFor(TimeSlot timeSlot) {
+        return timeSlotToBookStatus.get(timeSlot);
+    }
+
+    public void markAsBookedFor(TimeSlot timeSlot) {
+        timeSlotToBookStatus.put(timeSlot, true);
+    }
+}
