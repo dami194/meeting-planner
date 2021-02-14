@@ -13,6 +13,7 @@ public class Room {
         this.name = name;
         this.capacity = capacity;
         timeSlotToBookStatus = new LinkedHashMap<>();
+        // aucun créneau n'est réservé au démarrage de l'application
         Arrays.stream(TimeSlot.values()).forEach(timeSlot -> timeSlotToBookStatus.put(timeSlot, false));
     }
 
