@@ -12,6 +12,10 @@ public class Room {
     public Room(String name, int capacity) {
         this.name = name;
         this.capacity = capacity;
+        initializeTimeSlotStatus();
+    }
+
+    private void initializeTimeSlotStatus() {
         timeSlotToBookStatus = new LinkedHashMap<>();
         // aucun créneau n'est réservé au démarrage de l'application
         Arrays.stream(TimeSlot.values()).forEach(timeSlot -> timeSlotToBookStatus.put(timeSlot, false));
