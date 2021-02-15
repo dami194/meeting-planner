@@ -1,18 +1,21 @@
 package com.canalplus.meetingplanner.model;
 
-import java.util.Arrays;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.*;
 
 public class Room {
     private final String name;
     private final int capacity;
+    private final Set<Equipment> equipments;
     private Map<TimeSlot, Boolean> timeSlotToBookStatus;
 
-    public Room(String name, int capacity) {
+    public Room(String name, int capacity, Set<Equipment> equipments) {
         this.name = name;
         this.capacity = capacity;
+        this.equipments = equipments;
         initializeTimeSlotStatus();
+    }
+    public Room(String name, int capacity) {
+        this(name, capacity, Set.of());
     }
 
     private void initializeTimeSlotStatus() {

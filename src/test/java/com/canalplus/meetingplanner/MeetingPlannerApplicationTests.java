@@ -27,9 +27,14 @@ class MeetingPlannerApplicationTests {
 	@Qualifier(value = "E1001")
 	private Room roomE1001;
 
+	@Autowired
+	@Qualifier(value = "E3001")
+	private Room roomE3001;
+
 	@Test
 	void should_beans_be_correctly_created_with_good_capacity() {
 		assertThat(roomE1001.getCapacity()).isEqualTo(16);
+		assertThat(roomE3001.getCapacity()).isEqualTo(9);
 	}
 
 }
