@@ -5,8 +5,8 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class Room {
-    private String name;
-    private int capacity;
+    private final String name;
+    private final int capacity;
     private Map<TimeSlot, Boolean> timeSlotToBookStatus;
 
     public Room(String name, int capacity) {

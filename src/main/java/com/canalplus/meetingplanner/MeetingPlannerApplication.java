@@ -1,15 +1,22 @@
 package com.canalplus.meetingplanner;
 
 import com.canalplus.meetingplanner.model.Room;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.core.env.Environment;
 
 @SpringBootApplication
 public class MeetingPlannerApplication {
+
+	@Value( "${covid.roomCapacityLimitation:0.0}" )
+	private double roomCapacityLimitation;
 
 	public static void main(String[] args) {
 		SpringApplication.run(MeetingPlannerApplication.class, args);
@@ -17,7 +24,8 @@ public class MeetingPlannerApplication {
 
 	@Bean(name="E1001")
 	public Room defineRoom_E1001(){
-		return new Room("E1001", 23);
+		System.out.println("Pour cause de Covid, la capacité des salles sera réduite à " + (roomCapacityLimitation*100) + " % de sa capacité initiale");
+		return new Room("E1001", computeRealRoomCapacity(23));
 	}
 
 	@Bean(name="E1002")
@@ -75,6 +83,8 @@ public class MeetingPlannerApplication {
 		return new Room("E3004", 4);
 	}
 
-
+	private int computeRealRoomCapacity(int initialCapacity) {
+		return (int) (roomCapacityLimitation * initialCapacity);
+	}
 
 }
