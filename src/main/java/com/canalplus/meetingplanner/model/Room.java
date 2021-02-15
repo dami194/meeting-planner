@@ -6,7 +6,7 @@ public class Room {
     private final String name;
     private final int capacity;
     private final Set<Equipment> equipments;
-    private Map<TimeSlot, Boolean> timeSlotToBookStatus;
+    private Map<TimeSlot, Boolean> bookStatusByTimeSlot;
 
     public Room(String name, int capacity, Set<Equipment> equipments) {
         this.name = name;
@@ -19,9 +19,9 @@ public class Room {
     }
 
     private void initializeTimeSlotStatus() {
-        timeSlotToBookStatus = new LinkedHashMap<>();
+        bookStatusByTimeSlot = new LinkedHashMap<>();
         // aucun créneau n'est réservé au démarrage de l'application
-        Arrays.stream(TimeSlot.values()).forEach(timeSlot -> timeSlotToBookStatus.put(timeSlot, false));
+        Arrays.stream(TimeSlot.values()).forEach(timeSlot -> bookStatusByTimeSlot.put(timeSlot, false));
     }
 
     public String getName() {
@@ -33,10 +33,10 @@ public class Room {
     }
 
     public boolean isBookedFor(TimeSlot timeSlot) {
-        return timeSlotToBookStatus.get(timeSlot);
+        return bookStatusByTimeSlot.get(timeSlot);
     }
 
     public void markAsBookedFor(TimeSlot timeSlot) {
-        timeSlotToBookStatus.put(timeSlot, true);
+        bookStatusByTimeSlot.put(timeSlot, true);
     }
 }
