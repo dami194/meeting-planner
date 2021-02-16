@@ -43,4 +43,13 @@ public class Room {
     public void markAsBookedFor(TimeSlot timeSlot) {
         bookStatusByTimeSlot.put(timeSlot, true);
     }
+
+    @Override
+    public String toString() {
+        return "Room{" +
+                "name='" + name + '\'' +
+                ", capacity=" + capacity +
+                ", equipments=" + equipments +
+                '}';
+    }
 }

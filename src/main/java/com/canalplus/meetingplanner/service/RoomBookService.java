@@ -34,8 +34,8 @@ public class RoomBookService {
     }
 
     private List<Equipment> getRemovableEquipments() {
-        return Arrays.asList(MULTILINE_SPEAKER, MULTILINE_SPEAKER, MULTILINE_SPEAKER, MULTILINE_SPEAKER,
-                SCREEN, SCREEN, SCREEN, SCREEN, SCREEN, WEBCAM, WEBCAM, WEBCAM, WEBCAM, BOARD, BOARD);
+        return new ArrayList<>(Arrays.asList(MULTILINE_SPEAKER, MULTILINE_SPEAKER, MULTILINE_SPEAKER, MULTILINE_SPEAKER,
+                SCREEN, SCREEN, SCREEN, SCREEN, SCREEN, WEBCAM, WEBCAM, WEBCAM, WEBCAM, BOARD, BOARD));
     }
 
     public List<Equipment> getAvailableRemovableEquipmentsFor(TimeSlot timeSlot) {
@@ -45,6 +45,7 @@ public class RoomBookService {
     public RoomBookResult bookRoomFor(Meeting meeting) {
         List<Room> rooms = allRooms.getRooms();
 
+        // On récupère d'abord les salles pas encore réservées à cette heure
         // Si plus aucune salle n'est disponible à cette heure : ECHEC
         TimeSlot meetingTimeSlot = meeting.getTimeSlot();
         List<Room> unbookedRooms = roomFinder.findUnbookedRoomsAtTimeSlot(rooms, meetingTimeSlot);
@@ -52,6 +53,16 @@ public class RoomBookService {
             return new RoomBookResult(RoomBookStatus.FAILURE);
         }
 
+        // On filtre ensuite les salles qui ont été réservées au créneau précédent celui demandé
+        // sauf pour le premier créneau (pas de précédent)
+        if (meetingTimeSlot.previousSlot().isPresent()) {
+            unbookedRooms = roomFinder.findUnbookedRoomsAtTimeSlot(unbookedRooms, meetingTimeSlot.previousSlot().get());
+            if (unbookedRooms.isEmpty()) {
+                return new RoomBookResult(RoomBookStatus.FAILURE);
+            }
+        }
+
+        // On filtre ensuite les salles qui n'ont pas la capacité demandée
         // Si plus aucune salle n'est disponible avec la bonne capacité : ECHEC
         int employeesNumber = meeting.getEmployeesNumber();
         List<Room> unbookedRoomsWithGoodCapacity = roomFinder.findRoomsWithMinimumCapacity(unbookedRooms, employeesNumber);
@@ -61,58 +72,61 @@ public class RoomBookService {
 
         MeetingType meetingType = meeting.getType();
 
-        // RS : nécessite juste une salle au-delà de 3 collaborateurs
+        // RS : ne nécessite rien de plus (donc arrivé ici on renvoie toujours une salle)
         if (MeetingType.RS == meetingType) {
             return getRoomBookResultForRSMeeting(meetingTimeSlot, unbookedRoomsWithGoodCapacity);
+        }
+
+        // SPEC : nécessite en plus un tableau
+        else if (MeetingType.SPEC == meetingType) {
+            return getRoomBookResultForSPECMeeting(meetingTimeSlot, unbookedRoomsWithGoodCapacity);
         }
 
         return new RoomBookResult(RoomBookStatus.FAILURE);
     }
 
     private RoomBookResult getRoomBookResultForRSMeeting(TimeSlot meetingTimeSlot, List<Room> availableRooms) {
-
-        List<Room> availableRoomsWithAtLeast4Places = roomFinder.findRoomsWithMinimumCapacity(availableRooms, 4);
-
-        if (availableRoomsWithAtLeast4Places.isEmpty()) {
-            return new RoomBookResult(RoomBookStatus.FAILURE);
-        }
         // Ci-dessous je voyais deux choix pour déterminer la salle à réserver
         // 1) prendre en priorité la salle avec la plus petite capacité
         // 2) prendre en priorité la salle avec le moins d'équipement
         // j'ai choisi la solution 2 : en effet les autres types de réunion nécessitent des équipements donc autant leur laisser ces salles-là !
-        List<Room> availableRoomsWithAtLeast4PlacesOrdered = availableRoomsWithAtLeast4Places.stream()
-                .sorted(Comparator.comparing(room -> room.getEquipments().size()))
-                .collect(Collectors.toList());
-        Room bookedRoom = availableRoomsWithAtLeast4PlacesOrdered.get(0);
+        List<Room> availableRoomsOrdered = getOrderedRoomsByEquipmentsNumber(availableRooms);
+        Room bookedRoom = availableRoomsOrdered.get(0);
         bookedRoom.markAsBookedFor(meetingTimeSlot);
         return new RoomBookResult(bookedRoom, RoomBookStatus.SUCCESS);
     }
 
-    public RoomBookResult bookRoomFor(Room room, TimeSlot timeSlot) {
-        if (canRoomBeBookedFor(room, timeSlot)) {
-            room.markAsBookedFor(timeSlot);
-            return new RoomBookResult(room, RoomBookStatus.SUCCESS);
+    private RoomBookResult getRoomBookResultForSPECMeeting(TimeSlot meetingTimeSlot, List<Room> availableRooms) {
+        List<Room> availableRoomsWithBoard = roomFinder.findRoomsWithSpecifiedEquipments(availableRooms, Set.of(BOARD));
+
+        // On a trouvé une salle avec les équipements déjà présents : on prend la première
+        if (!availableRoomsWithBoard.isEmpty()) {
+            Room bookedRoom = getOrderedRoomsByEquipmentsNumber(availableRoomsWithBoard).get(0);
+            bookedRoom.markAsBookedFor(meetingTimeSlot);
+            return new RoomBookResult(bookedRoom, RoomBookStatus.SUCCESS);
         }
-        return new RoomBookResult(room, RoomBookStatus.FAILURE);
+
+        // Sinon cela veut dire qu'aucune salle disponible ne contient un tableau
+        // ==> on va regarder les équipements amovibles disponibles pour ce créneau
+        else {
+            List<Equipment> removableAvailableEquipments = getAvailableRemovableEquipmentsFor(meetingTimeSlot);
+            if (removableAvailableEquipments.isEmpty() || !removableAvailableEquipments.contains(BOARD)) {
+                return new RoomBookResult(RoomBookStatus.FAILURE);
+            }
+
+            removableAvailableEquipments.remove(BOARD);
+            Room bookedRoom = getOrderedRoomsByEquipmentsNumber(availableRooms).get(0);
+            bookedRoom.markAsBookedFor(meetingTimeSlot);
+            return new RoomBookResult(bookedRoom, RoomBookStatus.SUCCESS);
+        }
     }
 
-    private boolean canRoomBeBookedFor(Room room, TimeSlot timeSlot) {
-        // si elle est déjà réservée : on sort
-        if (room.isBookedFor(timeSlot)) {
-            return false;
-        }
-
-        // si c'est la première heure de la journée : c'est bon
-        if (EIGHT_NINE == timeSlot) {
-            return true;
-        }
-
-        // si le créneau précédent était réservé :
-        if (room.isBookedFor(timeSlot.previousSlot().get())) {
-            return false;
-        }
-
-        return true;
+    private List<Room> getOrderedRoomsByEquipmentsNumber(List<Room> rooms) {
+        return rooms.stream()
+                .sorted(Comparator.comparing(room -> room.getEquipments().size()))
+                .collect(Collectors.toList());
     }
+
+
 
 }
