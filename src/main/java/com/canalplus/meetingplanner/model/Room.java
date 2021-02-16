@@ -32,6 +32,10 @@ public class Room {
         return capacity;
     }
 
+    public Set<Equipment> getEquipments() {
+        return equipments;
+    }
+
     public boolean isBookedFor(TimeSlot timeSlot) {
         return bookStatusByTimeSlot.get(timeSlot);
     }

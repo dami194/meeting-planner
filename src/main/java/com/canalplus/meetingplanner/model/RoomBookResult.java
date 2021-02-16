@@ -10,6 +10,10 @@ public class RoomBookResult {
         this.roomBookStatus = roomBookStatus;
     }
 
+    public RoomBookResult(RoomBookStatus roomBookStatus) {
+        this(null, roomBookStatus);
+    }
+
     public Room getRoom() {
         return room;
     }
