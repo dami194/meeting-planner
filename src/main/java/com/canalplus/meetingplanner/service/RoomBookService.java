@@ -20,6 +20,9 @@ public class RoomBookService {
 
     @Autowired
     private AllRooms allRooms;
+
+    @Autowired
+    private RoomFinder roomFinder;
     
     private Map<TimeSlot, List<Equipment>> availableRemovableEquipmentsByTimeSlot = new HashMap<>();
 
@@ -44,14 +47,14 @@ public class RoomBookService {
 
         // Si plus aucune salle n'est disponible à cette heure : ECHEC
         TimeSlot meetingTimeSlot = meeting.getTimeSlot();
-        List<Room> unbookedRooms = allRooms.getRooms().stream().filter(room -> !room.isBookedFor(meetingTimeSlot)).collect(Collectors.toList());
+        List<Room> unbookedRooms = roomFinder.findUnbookedRoomsAtTimeSlot(rooms, meetingTimeSlot);
         if (unbookedRooms.isEmpty()) {
             return new RoomBookResult(RoomBookStatus.FAILURE);
         }
 
         // Si plus aucune salle n'est disponible avec la bonne capacité : ECHEC
         int employeesNumber = meeting.getEmployeesNumber();
-        List<Room> unbookedRoomsWithGoodCapacity = unbookedRooms.stream().filter(unbookedRoom -> unbookedRoom.getCapacity() >= employeesNumber).collect(Collectors.toList());
+        List<Room> unbookedRoomsWithGoodCapacity = roomFinder.findRoomsWithMinimumCapacity(unbookedRooms, employeesNumber);
         if (unbookedRoomsWithGoodCapacity.isEmpty()) {
             return new RoomBookResult(RoomBookStatus.FAILURE);
         }
@@ -66,21 +69,21 @@ public class RoomBookService {
         return new RoomBookResult(RoomBookStatus.FAILURE);
     }
 
-    private RoomBookResult getRoomBookResultForRSMeeting(TimeSlot meetingTimeSlot, List<Room> unbookedRoomsWithGoodCapacity) {
-        List<Room> unbookedRoomsWithGoodCapacityWithAtLeast3Places = unbookedRoomsWithGoodCapacity.stream()
-                .filter(room -> room.getCapacity() > 3)
-                .collect(Collectors.toList());
-        if (unbookedRoomsWithGoodCapacityWithAtLeast3Places.isEmpty()) {
+    private RoomBookResult getRoomBookResultForRSMeeting(TimeSlot meetingTimeSlot, List<Room> availableRooms) {
+
+        List<Room> availableRoomsWithAtLeast4Places = roomFinder.findRoomsWithMinimumCapacity(availableRooms, 4);
+
+        if (availableRoomsWithAtLeast4Places.isEmpty()) {
             return new RoomBookResult(RoomBookStatus.FAILURE);
         }
         // Ci-dessous je voyais deux choix pour déterminer la salle à réserver
         // 1) prendre en priorité la salle avec la plus petite capacité
         // 2) prendre en priorité la salle avec le moins d'équipement
         // j'ai choisi la solution 2 : en effet les autres types de réunion nécessitent des équipements donc autant leur laisser ces salles-là !
-        List<Room> unbookedRoomsWithGoodCapacityWithAtLeast3PlacesAndOrdered = unbookedRoomsWithGoodCapacityWithAtLeast3Places.stream()
+        List<Room> availableRoomsWithAtLeast4PlacesOrdered = availableRoomsWithAtLeast4Places.stream()
                 .sorted(Comparator.comparing(room -> room.getEquipments().size()))
                 .collect(Collectors.toList());
-        Room bookedRoom = unbookedRoomsWithGoodCapacityWithAtLeast3PlacesAndOrdered.get(0);
+        Room bookedRoom = availableRoomsWithAtLeast4PlacesOrdered.get(0);
         bookedRoom.markAsBookedFor(meetingTimeSlot);
         return new RoomBookResult(bookedRoom, RoomBookStatus.SUCCESS);
     }
