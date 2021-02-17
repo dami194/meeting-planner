@@ -6,21 +6,29 @@ import com.canalplus.meetingplanner.model.Room;
 import com.canalplus.meetingplanner.model.RoomBookResult;
 import com.canalplus.meetingplanner.model.RoomBookStatus;
 import com.canalplus.meetingplanner.model.meeting.Meeting;
-import com.canalplus.meetingplanner.service.RoomBookService;
-import com.fasterxml.jackson.annotation.JacksonInject;
+import com.canalplus.meetingplanner.model.meeting.MeetingType;
+import com.canalplus.meetingplanner.service.RoomBookRSService;
+import com.canalplus.meetingplanner.service.RoomBookSPECService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
-import java.util.List;
+
+import static com.canalplus.meetingplanner.model.meeting.MeetingType.RS;
+import static com.canalplus.meetingplanner.model.meeting.MeetingType.SPEC;
 
 @RestController
 public class RoomReservationController {
 
+//    @Autowired
+//    private RoomBookService roomBookService;
+
     @Autowired
-    private RoomBookService roomBookService;
+    private RoomBookRSService roomBookRSService;
+
+    @Autowired
+    private RoomBookSPECService roomBookSPECService;
 
     @Autowired
     private AllRooms allRooms;
@@ -49,7 +57,13 @@ public class RoomReservationController {
 
     @PostMapping(value="/bookRoom")
     public Meeting bookARoom(@RequestBody Meeting meeting) {
-        RoomBookResult roomBookResult = roomBookService.bookRoomFor(meeting);
+        MeetingType meetingType = meeting.getType();
+        RoomBookResult roomBookResult = null;
+        if (RS == meetingType) {
+            roomBookResult = roomBookRSService.bookRoomFor(meeting);
+        } else if (SPEC == meetingType) {
+            roomBookResult = roomBookSPECService.bookRoomFor(meeting);
+        }
 
         if (roomBookResult.getRoomBookStatus() == RoomBookStatus.SUCCESS) {
             meeting.setBookedRoom(roomBookResult.getRoom());
