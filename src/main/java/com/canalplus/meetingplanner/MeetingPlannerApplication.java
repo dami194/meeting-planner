@@ -1,6 +1,5 @@
 package com.canalplus.meetingplanner;
 
-import com.canalplus.meetingplanner.model.Equipment;
 import com.canalplus.meetingplanner.model.Room;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;

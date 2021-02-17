@@ -1,6 +1,5 @@
 package com.canalplus.meetingplanner.controller;
 
-import com.canalplus.meetingplanner.MeetingPlannerApplication;
 import com.canalplus.meetingplanner.model.Room;
 import com.canalplus.meetingplanner.model.RoomBookResult;
 import com.canalplus.meetingplanner.model.RoomBookStatus;
@@ -12,14 +11,15 @@ import com.canalplus.meetingplanner.service.RoomBookRSService;
 import com.canalplus.meetingplanner.service.RoomBookSPECService;
 import com.canalplus.meetingplanner.service.RoomBookVCService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Collection;
 import java.util.List;
 
 import static com.canalplus.meetingplanner.model.meeting.MeetingType.*;
 
+/**
+ * Point d'entrée de l'API pour réserver une salle de réunion et consulter les salles
+ */
 @RestController
 public class RoomReservationController {
 

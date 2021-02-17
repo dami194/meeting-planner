@@ -13,6 +13,9 @@ import java.util.stream.Collectors;
 
 import static com.canalplus.meetingplanner.model.Equipment.*;
 
+/**
+ * Service permettant de réserver une salle pour une réunion couplée (type "RC")
+ */
 @Service
 public class RoomBookRCService {
 

@@ -2,6 +2,10 @@ package com.canalplus.meetingplanner.model;
 
 import java.util.Optional;
 
+/**
+ * Représente un créneau horaire
+ * Les valeurs vont de EIGHT_NINE (8h-9h) à NINETEEN_TWENTY (19h-20h)
+ */
 public enum TimeSlot {
     EIGHT_NINE,
     NINE_TEN,
@@ -31,24 +35,6 @@ public enum TimeSlot {
             case EIGHTEEN_NINETEEN: return Optional.of(SEVENTEEN_EIGHTEEN);
             case NINETEEN_TWENTY:
             default: return Optional.of(EIGHTEEN_NINETEEN);
-        }
-    }
-
-    public Optional<TimeSlot> nextSlot() {
-        switch(this) {
-            case EIGHT_NINE: return Optional.of(NINE_TEN);
-            case NINE_TEN: return Optional.of(TEN_ELEVEN);
-            case TEN_ELEVEN: return Optional.of(ELEVEN_TWELVE);
-            case ELEVEN_TWELVE: return Optional.of(TWELVE_THIRTEEN);
-            case TWELVE_THIRTEEN: return Optional.of(THIRTEEN_FOURTEEN);
-            case THIRTEEN_FOURTEEN: return Optional.of(FOURTEEN_FIFTEEN);
-            case FOURTEEN_FIFTEEN: return Optional.of(FIFTEEN_SIXTEEN);
-            case FIFTEEN_SIXTEEN: return Optional.of(SIXTEEN_SEVENTEEN);
-            case SIXTEEN_SEVENTEEN: return Optional.of(SEVENTEEN_EIGHTEEN);
-            case SEVENTEEN_EIGHTEEN: return Optional.of(EIGHTEEN_NINETEEN);
-            case EIGHTEEN_NINETEEN: return Optional.of(NINETEEN_TWENTY);
-            case NINETEEN_TWENTY:
-            default: return Optional.empty();
         }
     }
 }

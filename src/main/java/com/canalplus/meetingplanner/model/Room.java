@@ -2,6 +2,10 @@ package com.canalplus.meetingplanner.model;
 
 import java.util.*;
 
+/**
+ * Une salle de réunion.
+ * Contient le statut de réservation à chaque créneau disponible
+ */
 public class Room {
     private final String name;
     private final int capacity;
@@ -16,6 +20,11 @@ public class Room {
     }
     public Room(String name, int capacity) {
         this(name, capacity, Set.of());
+    }
+
+    // for deserialization
+    public Room() {
+        this("default name", 0);
     }
 
     private void initializeTimeSlotStatus() {

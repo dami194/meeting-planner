@@ -9,6 +9,9 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+/**
+ * Service utilitaire permettant d'effectuer des recherches sur les salles selon plusieurs critères
+ */
 @Service
 public class RoomFinder {
 

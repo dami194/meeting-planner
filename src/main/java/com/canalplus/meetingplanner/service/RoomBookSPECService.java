@@ -2,7 +2,6 @@ package com.canalplus.meetingplanner.service;
 
 import com.canalplus.meetingplanner.model.*;
 import com.canalplus.meetingplanner.model.meeting.Meeting;
-import com.canalplus.meetingplanner.model.meeting.MeetingType;
 import com.canalplus.meetingplanner.repository.RoomBookRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,6 +13,9 @@ import java.util.stream.Collectors;
 
 import static com.canalplus.meetingplanner.model.Equipment.BOARD;
 
+/**
+ * Service permettant de réserver une salle pour une séance de partage et d'études de cas (type "SPEC")
+ */
 @Service
 public class RoomBookSPECService {
 

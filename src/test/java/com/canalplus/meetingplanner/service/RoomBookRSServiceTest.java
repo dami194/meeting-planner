@@ -15,9 +15,11 @@ import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.*;
+import java.util.List;
+import java.util.Set;
 
-import static com.canalplus.meetingplanner.model.Equipment.*;
+import static com.canalplus.meetingplanner.model.Equipment.BOARD;
+import static com.canalplus.meetingplanner.model.Equipment.MULTILINE_SPEAKER;
 import static com.canalplus.meetingplanner.model.TimeSlot.EIGHT_NINE;
 import static com.canalplus.meetingplanner.model.TimeSlot.NINE_TEN;
 import static org.assertj.core.api.Assertions.assertThat;

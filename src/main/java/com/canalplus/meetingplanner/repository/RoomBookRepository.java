@@ -12,6 +12,11 @@ import java.util.*;
 import static com.canalplus.meetingplanner.model.Equipment.*;
 import static com.canalplus.meetingplanner.model.Equipment.BOARD;
 
+/**
+ * Permet de récupérer toutes les salles de réunion
+ * Gère également les équipements amovibles disponibles à chaque créneau
+ * Par défaut, tous les équipements amovibles sont disponibles à chaque créneau.
+ */
 @Repository
 public class RoomBookRepository {
 

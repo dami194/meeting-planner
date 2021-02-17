@@ -1,20 +1,18 @@
 package com.canalplus.meetingplanner.service;
 
-import com.canalplus.meetingplanner.model.*;
-import com.canalplus.meetingplanner.model.meeting.Meeting;
-import com.canalplus.meetingplanner.model.meeting.MeetingType;
+import com.canalplus.meetingplanner.model.Room;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.*;
+import java.util.List;
+import java.util.Set;
 
 import static com.canalplus.meetingplanner.model.Equipment.*;
 import static com.canalplus.meetingplanner.model.TimeSlot.*;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.when;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @ExtendWith(MockitoExtension.class)
 class RoomFinderTest {
