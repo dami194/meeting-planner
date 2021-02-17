@@ -22,7 +22,6 @@ public class MeetingPlannerApplication {
 
 	@Bean(name="E1001")
 	public Room defineRoom_E1001(){
-		System.out.println("Pour cause de Covid, la capacité des salles sera réduite à " + (roomCapacityLimitation*100) + " % de sa capacité initiale");
 		return new Room("E1001", computeRealRoomCapacity(23));
 	}
 

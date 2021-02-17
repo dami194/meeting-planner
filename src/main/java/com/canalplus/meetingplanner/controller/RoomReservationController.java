@@ -13,6 +13,7 @@ import com.canalplus.meetingplanner.service.RoomBookVCService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.canalplus.meetingplanner.model.MeetingType.*;
@@ -67,5 +68,14 @@ public class RoomReservationController {
         meeting.setBookedRoomResult(roomBookResult);
 
         return meeting;
+    }
+
+    @PostMapping(value="/bookRooms")
+    public List<Meeting> bookSeveralRooms(@RequestBody List<Meeting> meetings) {
+        List<Meeting> meetingsWithResult = new ArrayList<>();
+
+        meetings.forEach(meeting -> meetingsWithResult.add(bookARoom(meeting)));
+
+        return meetingsWithResult;
     }
 }
