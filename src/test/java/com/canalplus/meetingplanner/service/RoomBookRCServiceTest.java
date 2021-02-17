@@ -1,5 +1,6 @@
 package com.canalplus.meetingplanner.service;
 
+import com.canalplus.meetingplanner.exceptions.NoAvailableRoomException;
 import com.canalplus.meetingplanner.model.Room;
 import com.canalplus.meetingplanner.model.RoomBookResult;
 import com.canalplus.meetingplanner.model.RoomBookStatus;
@@ -49,7 +50,7 @@ class RoomBookRCServiceTest {
         TimeSlot meetingTimeSlot = EIGHT_NINE;
         int meetingEmployeesNumber = 5;
         when(roomBookRepository.getRooms()).thenReturn(rooms);
-        doThrow(new IllegalStateException()).when(roomFinder).findAvailableRooms(rooms, meetingTimeSlot, meetingEmployeesNumber);
+        doThrow(new NoAvailableRoomException("Pas de salle disponible")).when(roomFinder).findAvailableRooms(rooms, meetingTimeSlot, meetingEmployeesNumber);
 
         // Test
         Meeting meeting = new Meeting("réunion", meetingTimeSlot, MeetingType.RC, meetingEmployeesNumber);

@@ -1,5 +1,6 @@
 package com.canalplus.meetingplanner.service;
 
+import com.canalplus.meetingplanner.exceptions.NoAvailableRoomException;
 import com.canalplus.meetingplanner.model.*;
 import com.canalplus.meetingplanner.repository.RoomBookRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,8 +41,8 @@ public class RoomBookRCService {
         List<Room> availableRooms;
         try {
             availableRooms = roomFinder.findAvailableRooms(rooms, meeting.getTimeSlot(), meeting.getEmployeesNumber());
-        } catch (IllegalStateException e) {
-            return new RoomBookResult(RoomBookStatus.FAILURE);
+        } catch (NoAvailableRoomException e) {
+            return new RoomBookResult(e.getMessage());
         }
 
         return getRoomBookResultForRCMeeting(meeting.getTimeSlot(), availableRooms);
@@ -54,7 +55,7 @@ public class RoomBookRCService {
         if (!availableRoomsWithRCEquipments.isEmpty()) {
             Room bookedRoom = getOrderedRoomsByEquipmentsNumber(availableRoomsWithRCEquipments).get(0);
             bookedRoom.markAsBookedFor(meetingTimeSlot);
-            return new RoomBookResult(bookedRoom, RoomBookStatus.SUCCESS);
+            return new RoomBookResult(bookedRoom);
         }
 
         // Sinon on va regarder les équipements amovibles disponibles pour ce créneau
@@ -63,7 +64,8 @@ public class RoomBookRCService {
             if (!availableRemovableEquipments.contains(BOARD)
                     || !availableRemovableEquipments.contains(SCREEN)
                     || !availableRemovableEquipments.contains(MULTILINE_SPEAKER)) {
-                return new RoomBookResult(RoomBookStatus.FAILURE);
+                return new RoomBookResult("Les équipements amovibles restants pour le créneau " + meetingTimeSlot + " ne contiennent pas au moins" +
+                        " un tableau, un écran et une pieuvre");
             }
 
             availableRemovableEquipments.remove(BOARD);
@@ -71,7 +73,7 @@ public class RoomBookRCService {
             availableRemovableEquipments.remove(MULTILINE_SPEAKER);
             Room bookedRoom = getOrderedRoomsByEquipmentsNumber(availableRooms).get(0);
             bookedRoom.markAsBookedFor(meetingTimeSlot);
-            return new RoomBookResult(bookedRoom, RoomBookStatus.SUCCESS);
+            return new RoomBookResult(bookedRoom);
         }
     }
 

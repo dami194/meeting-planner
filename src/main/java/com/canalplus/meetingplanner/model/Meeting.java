@@ -5,7 +5,7 @@ public class Meeting {
     private final TimeSlot timeSlot;
     private final MeetingType type;
     private final int employeesNumber;
-    private Room bookedRoom;
+    private RoomBookResult bookedRoomResult;
 
     public Meeting(String name, TimeSlot timeSlot, MeetingType type, int employeesNumber) {
         this.name = name;
@@ -30,11 +30,11 @@ public class Meeting {
         return employeesNumber;
     }
 
-    public void setBookedRoom(Room bookedRoom) {
-        this.bookedRoom = bookedRoom;
+    public RoomBookResult getBookedRoomResult() {
+        return bookedRoomResult;
     }
 
-    public Room getBookedRoom() {
-        return bookedRoom;
+    public void setBookedRoomResult(RoomBookResult bookedRoomResult) {
+        this.bookedRoomResult = bookedRoomResult;
     }
 }

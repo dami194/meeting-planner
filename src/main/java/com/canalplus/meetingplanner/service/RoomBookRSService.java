@@ -1,5 +1,6 @@
 package com.canalplus.meetingplanner.service;
 
+import com.canalplus.meetingplanner.exceptions.NoAvailableRoomException;
 import com.canalplus.meetingplanner.model.*;
 import com.canalplus.meetingplanner.repository.RoomBookRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,8 +35,8 @@ public class RoomBookRSService {
         List<Room> availableRooms;
         try {
             availableRooms = roomFinder.findAvailableRooms(rooms, meeting.getTimeSlot(), meeting.getEmployeesNumber());
-        } catch (IllegalStateException e) {
-            return new RoomBookResult(RoomBookStatus.FAILURE);
+        } catch (NoAvailableRoomException e) {
+            return new RoomBookResult(e.getMessage());
         }
 
         return getRoomBookResultForRSMeeting(meeting.getTimeSlot(), availableRooms);
@@ -44,7 +45,7 @@ public class RoomBookRSService {
     private RoomBookResult getRoomBookResultForRSMeeting(TimeSlot meetingTimeSlot, List<Room> availableRooms) {
         Room bookedRoom = getOrderedRoomsByEquipmentsNumber(availableRooms).get(0);
         bookedRoom.markAsBookedFor(meetingTimeSlot);
-        return new RoomBookResult(bookedRoom, RoomBookStatus.SUCCESS);
+        return new RoomBookResult(bookedRoom);
     }
 
     private List<Room> getOrderedRoomsByEquipmentsNumber(List<Room> rooms) {

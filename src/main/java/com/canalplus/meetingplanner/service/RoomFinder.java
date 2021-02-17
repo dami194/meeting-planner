@@ -1,5 +1,6 @@
 package com.canalplus.meetingplanner.service;
 
+import com.canalplus.meetingplanner.exceptions.NoAvailableRoomException;
 import com.canalplus.meetingplanner.model.Equipment;
 import com.canalplus.meetingplanner.model.Room;
 import com.canalplus.meetingplanner.model.TimeSlot;
@@ -15,17 +16,17 @@ import java.util.stream.Collectors;
 @Service
 public class RoomFinder {
 
-    public List<Room> findAvailableRooms(List<Room> rooms, TimeSlot meetingTimeSlot, int meetingEmployeesNumber) throws IllegalStateException {
+    public List<Room> findAvailableRooms(List<Room> rooms, TimeSlot meetingTimeSlot, int meetingEmployeesNumber) throws NoAvailableRoomException {
         List<Room> unbookedRooms = findUnbookedRoomsAtTimeSlot(rooms, meetingTimeSlot);
         if (unbookedRooms.isEmpty()) {
-            throw new IllegalStateException();
+            throw new NoAvailableRoomException("Toutes les salles au créneau " + meetingTimeSlot + " sont déjà réservées");
         }
 
         List<Room> unbookedCleanedRooms;
         if (meetingTimeSlot.previousSlot().isPresent()) {
             unbookedCleanedRooms = findUnbookedRoomsAtTimeSlot(unbookedRooms, meetingTimeSlot.previousSlot().get());
             if (unbookedCleanedRooms.isEmpty()) {
-                throw new IllegalStateException();
+                throw new NoAvailableRoomException("Toutes les salles non réservées au créneau " + meetingTimeSlot + " ont déjà réservées au créneau précédent");
             }
         } else {
             unbookedCleanedRooms = unbookedRooms;
@@ -33,7 +34,7 @@ public class RoomFinder {
 
         List<Room> availableRooms = findRoomsWithMinimumCapacity(unbookedCleanedRooms, meetingEmployeesNumber);
         if (availableRooms.isEmpty()) {
-            throw new IllegalStateException();
+            throw new NoAvailableRoomException("Les salles ni réservées au créneau " + meetingTimeSlot + " ni réservées au créneau précédent n'ont pas la capacité requise");
         }
 
         return availableRooms;

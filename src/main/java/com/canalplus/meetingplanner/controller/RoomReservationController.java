@@ -51,6 +51,7 @@ public class RoomReservationController {
     @PostMapping(value="/bookRoom")
     public Meeting bookARoom(@RequestBody Meeting meeting) {
         MeetingType meetingType = meeting.getType();
+
         RoomBookResult roomBookResult = null;
 
         if (RS == meetingType) {
@@ -63,9 +64,7 @@ public class RoomReservationController {
             roomBookResult = roomBookRCService.bookRoomFor(meeting);
         }
 
-        if (roomBookResult.getRoomBookStatus() == RoomBookStatus.SUCCESS) {
-            meeting.setBookedRoom(roomBookResult.getRoom());
-        }
+        meeting.setBookedRoomResult(roomBookResult);
 
         return meeting;
     }
