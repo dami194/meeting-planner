@@ -1,7 +1,6 @@
 package com.canalplus.meetingplanner.controller;
 
 import com.canalplus.meetingplanner.MeetingPlannerApplication;
-import com.canalplus.meetingplanner.model.AllRooms;
 import com.canalplus.meetingplanner.model.Room;
 import com.canalplus.meetingplanner.model.RoomBookResult;
 import com.canalplus.meetingplanner.model.RoomBookStatus;
@@ -21,17 +20,11 @@ import static com.canalplus.meetingplanner.model.meeting.MeetingType.SPEC;
 @RestController
 public class RoomReservationController {
 
-//    @Autowired
-//    private RoomBookService roomBookService;
-
     @Autowired
     private RoomBookRSService roomBookRSService;
 
     @Autowired
     private RoomBookSPECService roomBookSPECService;
-
-    @Autowired
-    private AllRooms allRooms;
 
     @PostMapping(value="/reserveRoom")
     public String reserveRoom() {
