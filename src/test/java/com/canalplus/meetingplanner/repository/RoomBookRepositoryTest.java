@@ -31,7 +31,7 @@ class RoomBookRepositoryTest {
     @Test
     void should_removable_equipments_be_all_available_when_no_meeting_has_been_booked() {
         // Assert
-        List<Equipment> removableEquipments = Arrays.asList(MULTILINE_SPEAKER, MULTILINE_SPEAKER, MULTILINE_SPEAKER, MULTILINE_SPEAKER,
+        var removableEquipments = Arrays.asList(MULTILINE_SPEAKER, MULTILINE_SPEAKER, MULTILINE_SPEAKER, MULTILINE_SPEAKER,
                 SCREEN, SCREEN, SCREEN, SCREEN, SCREEN, WEBCAM, WEBCAM, WEBCAM, WEBCAM, BOARD, BOARD);
         Arrays.stream(TimeSlot.values())
                 .forEach(timeSlot ->

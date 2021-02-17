@@ -72,7 +72,7 @@ public class RoomReservationController {
 
     @PostMapping(value="/bookRooms")
     public List<Meeting> bookSeveralRooms(@RequestBody List<Meeting> meetings) {
-        List<Meeting> meetingsWithResult = new ArrayList<>();
+        var meetingsWithResult = new ArrayList<Meeting>();
 
         meetings.forEach(meeting -> meetingsWithResult.add(bookARoom(meeting)));
 

@@ -1,12 +1,7 @@
 package com.canalplus.meetingplanner.service;
 
 import com.canalplus.meetingplanner.exceptions.NoAvailableRoomException;
-import com.canalplus.meetingplanner.model.Room;
-import com.canalplus.meetingplanner.model.RoomBookResult;
-import com.canalplus.meetingplanner.model.RoomBookStatus;
-import com.canalplus.meetingplanner.model.TimeSlot;
-import com.canalplus.meetingplanner.model.Meeting;
-import com.canalplus.meetingplanner.model.MeetingType;
+import com.canalplus.meetingplanner.model.*;
 import com.canalplus.meetingplanner.repository.RoomBookRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
