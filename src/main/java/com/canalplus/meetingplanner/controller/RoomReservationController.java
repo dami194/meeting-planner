@@ -6,6 +6,7 @@ import com.canalplus.meetingplanner.model.RoomBookResult;
 import com.canalplus.meetingplanner.model.RoomBookStatus;
 import com.canalplus.meetingplanner.model.meeting.Meeting;
 import com.canalplus.meetingplanner.model.meeting.MeetingType;
+import com.canalplus.meetingplanner.service.RoomBookRCService;
 import com.canalplus.meetingplanner.service.RoomBookRSService;
 import com.canalplus.meetingplanner.service.RoomBookSPECService;
 import com.canalplus.meetingplanner.service.RoomBookVCService;
@@ -29,6 +30,9 @@ public class RoomReservationController {
     @Autowired
     private RoomBookVCService roomBookVCService;
 
+    @Autowired
+    private RoomBookRCService roomBookRCService;
+
     @GetMapping(value="/room/{roomName}")
     public Room getRoom(@PathVariable String roomName) {
         var context = new AnnotationConfigApplicationContext(MeetingPlannerApplication.class);
@@ -45,12 +49,15 @@ public class RoomReservationController {
     public Meeting bookARoom(@RequestBody Meeting meeting) {
         MeetingType meetingType = meeting.getType();
         RoomBookResult roomBookResult = null;
+
         if (RS == meetingType) {
             roomBookResult = roomBookRSService.bookRoomFor(meeting);
         } else if (SPEC == meetingType) {
             roomBookResult = roomBookSPECService.bookRoomFor(meeting);
         } else if (VC == meetingType) {
             roomBookResult = roomBookVCService.bookRoomFor(meeting);
+        } else if (RC == meetingType) {
+            roomBookResult = roomBookRCService.bookRoomFor(meeting);
         }
 
         if (roomBookResult.getRoomBookStatus() == RoomBookStatus.SUCCESS) {

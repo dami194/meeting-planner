@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 import static com.canalplus.meetingplanner.model.Equipment.*;
 
 @Service
-public class RoomBookVCService {
+public class RoomBookRCService {
 
     @Autowired
     private RoomBookRepository roomBookRepository;
@@ -32,33 +32,33 @@ public class RoomBookVCService {
             return new RoomBookResult(RoomBookStatus.FAILURE);
         }
 
-        // VC : nécessite en plus un écran, une pieuvre et une webcam
-        return getRoomBookResultForVCMeeting(meeting.getTimeSlot(), availableRooms);
+        // RC : nécessite en plus un tableau, un écran et une pieuvre
+        return getRoomBookResultForRCMeeting(meeting.getTimeSlot(), availableRooms);
     }
 
-    private RoomBookResult getRoomBookResultForVCMeeting(TimeSlot meetingTimeSlot, List<Room> availableRooms) {
-        List<Room> availableRoomsWithVCEquipments = roomFinder.findRoomsWithSpecifiedEquipments(availableRooms, Set.of(SCREEN, MULTILINE_SPEAKER, WEBCAM));
+    private RoomBookResult getRoomBookResultForRCMeeting(TimeSlot meetingTimeSlot, List<Room> availableRooms) {
+        List<Room> availableRoomsWithRCEquipments = roomFinder.findRoomsWithSpecifiedEquipments(availableRooms, Set.of(BOARD, SCREEN, MULTILINE_SPEAKER));
 
         // On a trouvé une salle avec les équipements déjà présents : on prend la première
-        if (!availableRoomsWithVCEquipments.isEmpty()) {
-            Room bookedRoom = getOrderedRoomsByEquipmentsNumber(availableRoomsWithVCEquipments).get(0);
+        if (!availableRoomsWithRCEquipments.isEmpty()) {
+            Room bookedRoom = getOrderedRoomsByEquipmentsNumber(availableRoomsWithRCEquipments).get(0);
             bookedRoom.markAsBookedFor(meetingTimeSlot);
             return new RoomBookResult(bookedRoom, RoomBookStatus.SUCCESS);
         }
 
-        // Sinon cela veut dire qu'aucune salle disponible ne contient écran + pieuvre + webcam
+        // Sinon cela veut dire qu'aucune salle disponible ne contient tableau + écran + pieuvre
         // ==> on va regarder les équipements amovibles disponibles pour ce créneau
         else {
             List<Equipment> availableRemovableEquipments = roomBookRepository.getAvailableRemovableEquipmentsFor(meetingTimeSlot);
-            if (!availableRemovableEquipments.contains(SCREEN)
-                    || !availableRemovableEquipments.contains(MULTILINE_SPEAKER)
-                    || !availableRemovableEquipments.contains(WEBCAM)) {
+            if (!availableRemovableEquipments.contains(BOARD)
+                    || !availableRemovableEquipments.contains(SCREEN)
+                    || !availableRemovableEquipments.contains(MULTILINE_SPEAKER)) {
                 return new RoomBookResult(RoomBookStatus.FAILURE);
             }
 
+            availableRemovableEquipments.remove(BOARD);
             availableRemovableEquipments.remove(SCREEN);
             availableRemovableEquipments.remove(MULTILINE_SPEAKER);
-            availableRemovableEquipments.remove(WEBCAM);
             Room bookedRoom = getOrderedRoomsByEquipmentsNumber(availableRooms).get(0);
             bookedRoom.markAsBookedFor(meetingTimeSlot);
             return new RoomBookResult(bookedRoom, RoomBookStatus.SUCCESS);
