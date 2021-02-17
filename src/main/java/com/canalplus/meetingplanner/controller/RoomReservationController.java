@@ -8,14 +8,14 @@ import com.canalplus.meetingplanner.model.meeting.Meeting;
 import com.canalplus.meetingplanner.model.meeting.MeetingType;
 import com.canalplus.meetingplanner.service.RoomBookRSService;
 import com.canalplus.meetingplanner.service.RoomBookSPECService;
+import com.canalplus.meetingplanner.service.RoomBookVCService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
 
-import static com.canalplus.meetingplanner.model.meeting.MeetingType.RS;
-import static com.canalplus.meetingplanner.model.meeting.MeetingType.SPEC;
+import static com.canalplus.meetingplanner.model.meeting.MeetingType.*;
 
 @RestController
 public class RoomReservationController {
@@ -26,15 +26,8 @@ public class RoomReservationController {
     @Autowired
     private RoomBookSPECService roomBookSPECService;
 
-    @PostMapping(value="/reserveRoom")
-    public String reserveRoom() {
-        return "Room reserved";
-    }
-
-    @GetMapping(value="/reservedRooms")
-    public String getReservedRooms() {
-        return "List of rooms reserved";
-    }
+    @Autowired
+    private RoomBookVCService roomBookVCService;
 
     @GetMapping(value="/room/{roomName}")
     public Room getRoom(@PathVariable String roomName) {
@@ -56,6 +49,8 @@ public class RoomReservationController {
             roomBookResult = roomBookRSService.bookRoomFor(meeting);
         } else if (SPEC == meetingType) {
             roomBookResult = roomBookSPECService.bookRoomFor(meeting);
+        } else if (VC == meetingType) {
+            roomBookResult = roomBookVCService.bookRoomFor(meeting);
         }
 
         if (roomBookResult.getRoomBookStatus() == RoomBookStatus.SUCCESS) {

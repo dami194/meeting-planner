@@ -99,11 +99,11 @@ class RoomFinderTest {
         List<Room> rooms = List.of(room1, room2, room3, room4);
 
         // Test
-        List<Room> roomsWithSpecifiedEquipments = roomFinder.findRoomsWithSpecifiedEquipments(rooms, Set.of(SCREEN, BOARD));
-        List<Room> roomsWithSpecifiedEquipments2 = roomFinder.findRoomsWithSpecifiedEquipments(rooms, Set.of());
+        List<Room> roomsWithAtLeastScreenAndBoard = roomFinder.findRoomsWithSpecifiedEquipments(rooms, Set.of(SCREEN, BOARD));
+        List<Room> roomsWithNoSpecificEquipment = roomFinder.findRoomsWithSpecifiedEquipments(rooms, Set.of());
 
         // Assert
-        assertThat(roomsWithSpecifiedEquipments).containsExactly(room3, room4);
-        assertThat(roomsWithSpecifiedEquipments2).containsExactly(room1, room2, room3, room4);
+        assertThat(roomsWithAtLeastScreenAndBoard).containsExactly(room3, room4);
+        assertThat(roomsWithNoSpecificEquipment).containsExactly(room1, room2, room3, room4);
     }
 }

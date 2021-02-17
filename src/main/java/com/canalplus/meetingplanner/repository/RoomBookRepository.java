@@ -39,17 +39,4 @@ public class RoomBookRepository {
     public List<Equipment> getAvailableRemovableEquipmentsFor(TimeSlot timeSlot) {
         return availableRemovableEquipmentsByTimeSlot.get(timeSlot);
     }
-
-
-    // TODO mettre ça dans le TU
-    //    @Test
-//    void should_removable_equipments_be_all_available_when_no_meeting_has_been_booked() {
-//        // Assert
-//        List<Equipment> removableEquipments = Arrays.asList(MULTILINE_SPEAKER, MULTILINE_SPEAKER, MULTILINE_SPEAKER, MULTILINE_SPEAKER,
-//                SCREEN, SCREEN, SCREEN, SCREEN, SCREEN, WEBCAM, WEBCAM, WEBCAM, WEBCAM, BOARD, BOARD);
-//        Arrays.stream(TimeSlot.values())
-//                .forEach(timeSlot ->
-//                    assertThat(roomBookService.getAvailableRemovableEquipmentsFor(timeSlot)).containsExactlyElementsOf(removableEquipments)
-//                );
-//    }
 }
