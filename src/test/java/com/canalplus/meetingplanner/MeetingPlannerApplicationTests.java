@@ -1,5 +1,6 @@
 package com.canalplus.meetingplanner;
 
+import com.canalplus.meetingplanner.controller.RoomReservationController;
 import com.canalplus.meetingplanner.model.Room;
 import com.canalplus.meetingplanner.model.TimeSlot;
 import org.junit.jupiter.api.Test;
@@ -24,6 +25,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 class MeetingPlannerApplicationTests {
 
 	@Autowired
+	private RoomReservationController roomReservationController;
+
+	@Autowired
 	@Qualifier(value = "E1001")
 	private Room roomE1001;
 
@@ -31,8 +35,10 @@ class MeetingPlannerApplicationTests {
 	@Qualifier(value = "E3001")
 	private Room roomE3001;
 
+
 	@Test
-	void should_beans_be_correctly_created_with_good_capacity() {
+	public void contextLoads() {
+		assertThat(roomReservationController).isNotNull();
 		assertThat(roomE1001.getCapacity()).isEqualTo(16);
 		assertThat(roomE3001.getCapacity()).isEqualTo(9);
 	}

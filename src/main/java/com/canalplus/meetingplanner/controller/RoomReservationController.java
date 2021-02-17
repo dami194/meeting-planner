@@ -6,6 +6,7 @@ import com.canalplus.meetingplanner.model.RoomBookResult;
 import com.canalplus.meetingplanner.model.RoomBookStatus;
 import com.canalplus.meetingplanner.model.meeting.Meeting;
 import com.canalplus.meetingplanner.model.meeting.MeetingType;
+import com.canalplus.meetingplanner.repository.RoomBookRepository;
 import com.canalplus.meetingplanner.service.RoomBookRCService;
 import com.canalplus.meetingplanner.service.RoomBookRSService;
 import com.canalplus.meetingplanner.service.RoomBookSPECService;
@@ -15,6 +16,7 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
+import java.util.List;
 
 import static com.canalplus.meetingplanner.model.meeting.MeetingType.*;
 
@@ -33,16 +35,17 @@ public class RoomReservationController {
     @Autowired
     private RoomBookRCService roomBookRCService;
 
-    @GetMapping(value="/room/{roomName}")
-    public Room getRoom(@PathVariable String roomName) {
-        var context = new AnnotationConfigApplicationContext(MeetingPlannerApplication.class);
-        return (Room) context.getBean(roomName);
-    }
+    @Autowired
+    private RoomBookRepository roomBookRepository;
 
     @GetMapping(value="/rooms")
-    public Collection<Room> getRooms() {
-        var context = new AnnotationConfigApplicationContext(MeetingPlannerApplication.class);
-        return context.getBeansOfType(Room.class).values();
+    public List<Room> getRooms() {
+        return roomBookRepository.getRooms();
+    }
+
+    @GetMapping(value="/rooms/{roomName}")
+    public Room getRoom(@PathVariable String roomName) {
+        return roomBookRepository.getRooms().stream().filter(room -> room.getName().equals(roomName)).findFirst().orElseThrow();
     }
 
     @PostMapping(value="/bookRoom")
