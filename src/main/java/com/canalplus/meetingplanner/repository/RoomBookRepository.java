@@ -10,10 +10,9 @@ import javax.annotation.PostConstruct;
 import java.util.*;
 
 import static com.canalplus.meetingplanner.model.Equipment.*;
-import static com.canalplus.meetingplanner.model.Equipment.BOARD;
 
 /**
- * Permet de récupérer toutes les salles de réunion
+ * Service qui permet de récupérer toutes les salles de réunion
  * Gère également les équipements amovibles disponibles à chaque créneau
  * Par défaut, tous les équipements amovibles sont disponibles à chaque créneau.
  */
@@ -31,8 +30,6 @@ public class RoomBookRepository {
 
     @PostConstruct
     public void initRemovableEquipments() {
-        // Les équipements amovibles sont tous disponibles pour tous les créneaux au départ
-        // (autrement dit, un équipement amovible utilisé pour un créneau redevient disponible pour le créneau suivant)
         Arrays.stream(TimeSlot.values()).forEach(timeSlot -> availableRemovableEquipmentsByTimeSlot.put(timeSlot, getRemovableEquipments()));
     }
 

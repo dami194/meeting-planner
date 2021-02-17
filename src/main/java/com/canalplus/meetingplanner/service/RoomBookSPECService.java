@@ -1,7 +1,6 @@
 package com.canalplus.meetingplanner.service;
 
 import com.canalplus.meetingplanner.model.*;
-import com.canalplus.meetingplanner.model.meeting.Meeting;
 import com.canalplus.meetingplanner.repository.RoomBookRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,6 +14,15 @@ import static com.canalplus.meetingplanner.model.Equipment.BOARD;
 
 /**
  * Service permettant de réserver une salle pour une séance de partage et d'études de cas (type "SPEC")
+ *
+ * Une séance de partage et d'études de cas doit se faire dans une salle :
+ *
+ * - disponible au créneau horaire demandé (i.e. non réservée pour ce créneau, non réservée au créneau précédent
+ * et assez grande pour accueillir le nombre de personnes conviées à la réunion)
+ *
+ * et
+ *
+ * - comportant un tableau, ou qui peut récupérer en tant qu'équipement amovible un tableau
  */
 @Service
 public class RoomBookSPECService {
@@ -35,7 +43,6 @@ public class RoomBookSPECService {
             return new RoomBookResult(RoomBookStatus.FAILURE);
         }
 
-        // SPEC : nécessite en plus un tableau
         return getRoomBookResultForSPECMeeting(meeting.getTimeSlot(), availableRooms);
     }
 
@@ -49,8 +56,7 @@ public class RoomBookSPECService {
             return new RoomBookResult(bookedRoom, RoomBookStatus.SUCCESS);
         }
 
-        // Sinon cela veut dire qu'aucune salle disponible ne contient un tableau
-        // ==> on va regarder les équipements amovibles disponibles pour ce créneau
+        // Sinon on va regarder les équipements amovibles disponibles pour ce créneau
         else {
             List<Equipment> availableRemovableEquipments = roomBookRepository.getAvailableRemovableEquipmentsFor(meetingTimeSlot);
             if (!availableRemovableEquipments.contains(BOARD)) {

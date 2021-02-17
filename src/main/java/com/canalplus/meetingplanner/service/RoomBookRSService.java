@@ -1,10 +1,6 @@
 package com.canalplus.meetingplanner.service;
 
-import com.canalplus.meetingplanner.model.Room;
-import com.canalplus.meetingplanner.model.RoomBookResult;
-import com.canalplus.meetingplanner.model.RoomBookStatus;
-import com.canalplus.meetingplanner.model.TimeSlot;
-import com.canalplus.meetingplanner.model.meeting.Meeting;
+import com.canalplus.meetingplanner.model.*;
 import com.canalplus.meetingplanner.repository.RoomBookRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,6 +11,13 @@ import java.util.stream.Collectors;
 
 /**
  * Service permettant de réserver une salle pour une réunion simple (type "RS")
+ *
+ * Une réunion simple doit se faire dans une salle :
+ *
+ * - disponible au créneau horaire demandé (i.e. non réservée pour ce créneau, non réservée au créneau précédent
+ * et assez grande pour accueillir le nombre de personnes conviées à la réunion)
+ *
+ * Aucun équipement n'est requis pour ce type de réunion.
  */
 @Service
 public class RoomBookRSService {
@@ -35,15 +38,10 @@ public class RoomBookRSService {
             return new RoomBookResult(RoomBookStatus.FAILURE);
         }
 
-        // RS : ne nécessite rien de plus (donc arrivé ici on renvoie toujours une salle)
         return getRoomBookResultForRSMeeting(meeting.getTimeSlot(), availableRooms);
     }
 
     private RoomBookResult getRoomBookResultForRSMeeting(TimeSlot meetingTimeSlot, List<Room> availableRooms) {
-        // Ci-dessous je voyais deux choix pour déterminer la salle à réserver
-        // 1) prendre en priorité la salle avec la plus petite capacité
-        // 2) prendre en priorité la salle avec le moins d'équipement
-        // j'ai choisi la solution 2 : en effet les autres types de réunion nécessitent des équipements donc autant leur laisser ces salles-là !
         Room bookedRoom = getOrderedRoomsByEquipmentsNumber(availableRooms).get(0);
         bookedRoom.markAsBookedFor(meetingTimeSlot);
         return new RoomBookResult(bookedRoom, RoomBookStatus.SUCCESS);

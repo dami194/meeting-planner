@@ -1,7 +1,6 @@
 package com.canalplus.meetingplanner.service;
 
 import com.canalplus.meetingplanner.model.*;
-import com.canalplus.meetingplanner.model.meeting.Meeting;
 import com.canalplus.meetingplanner.repository.RoomBookRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,6 +14,16 @@ import static com.canalplus.meetingplanner.model.Equipment.*;
 
 /**
  * Service permettant de réserver une salle pour une réunion couplée (type "RC")
+ *
+ * Une réunion couplée doit se faire dans une salle :
+ *
+ * - disponible au créneau horaire demandé (i.e. non réservée pour ce créneau, non réservée au créneau précédent
+ * et assez grande pour accueillir le nombre de personnes conviées à la réunion)
+ *
+ * et
+ *
+ * - comportant un tableau, un écran et une pieuvre, ou qui peut récupérer en tant qu'équipements amovibles un tableau,
+ * un écran et une pieuvre
  */
 @Service
 public class RoomBookRCService {
@@ -35,7 +44,6 @@ public class RoomBookRCService {
             return new RoomBookResult(RoomBookStatus.FAILURE);
         }
 
-        // RC : nécessite en plus un tableau, un écran et une pieuvre
         return getRoomBookResultForRCMeeting(meeting.getTimeSlot(), availableRooms);
     }
 
@@ -49,8 +57,7 @@ public class RoomBookRCService {
             return new RoomBookResult(bookedRoom, RoomBookStatus.SUCCESS);
         }
 
-        // Sinon cela veut dire qu'aucune salle disponible ne contient tableau + écran + pieuvre
-        // ==> on va regarder les équipements amovibles disponibles pour ce créneau
+        // Sinon on va regarder les équipements amovibles disponibles pour ce créneau
         else {
             List<Equipment> availableRemovableEquipments = roomBookRepository.getAvailableRemovableEquipmentsFor(meetingTimeSlot);
             if (!availableRemovableEquipments.contains(BOARD)

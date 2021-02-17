@@ -1,4 +1,4 @@
-package com.canalplus.meetingplanner.model.meeting;
+package com.canalplus.meetingplanner.model;
 
 public enum MeetingType {
     VC,

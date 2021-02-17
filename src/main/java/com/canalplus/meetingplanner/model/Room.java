@@ -5,6 +5,7 @@ import java.util.*;
 /**
  * Une salle de réunion.
  * Contient le statut de réservation à chaque créneau disponible
+ * Aucun créneau n'est réservé au démarrage de l'application
  */
 public class Room {
     private final String name;
@@ -29,7 +30,6 @@ public class Room {
 
     private void initializeTimeSlotStatus() {
         bookStatusByTimeSlot = new LinkedHashMap<>();
-        // aucun créneau n'est réservé au démarrage de l'application
         Arrays.stream(TimeSlot.values()).forEach(timeSlot -> bookStatusByTimeSlot.put(timeSlot, false));
     }
 

@@ -1,7 +1,4 @@
-package com.canalplus.meetingplanner.model.meeting;
-
-import com.canalplus.meetingplanner.model.Room;
-import com.canalplus.meetingplanner.model.TimeSlot;
+package com.canalplus.meetingplanner.model;
 
 public class Meeting {
     private final String name;

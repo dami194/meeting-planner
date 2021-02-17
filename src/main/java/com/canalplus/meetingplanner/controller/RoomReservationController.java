@@ -3,8 +3,8 @@ package com.canalplus.meetingplanner.controller;
 import com.canalplus.meetingplanner.model.Room;
 import com.canalplus.meetingplanner.model.RoomBookResult;
 import com.canalplus.meetingplanner.model.RoomBookStatus;
-import com.canalplus.meetingplanner.model.meeting.Meeting;
-import com.canalplus.meetingplanner.model.meeting.MeetingType;
+import com.canalplus.meetingplanner.model.Meeting;
+import com.canalplus.meetingplanner.model.MeetingType;
 import com.canalplus.meetingplanner.repository.RoomBookRepository;
 import com.canalplus.meetingplanner.service.RoomBookRCService;
 import com.canalplus.meetingplanner.service.RoomBookRSService;
@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-import static com.canalplus.meetingplanner.model.meeting.MeetingType.*;
+import static com.canalplus.meetingplanner.model.MeetingType.*;
 
 /**
  * Point d'entrée de l'API pour réserver une salle de réunion et consulter les salles
