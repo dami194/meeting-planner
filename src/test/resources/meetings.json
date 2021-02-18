@@ -1,0 +1,122 @@
+[
+    {
+        "name": "Réunion 1",
+        "timeSlot" : "NINE_TEN",
+        "type" : "VC",
+        "employeesNumber" : 8
+    },
+    {
+        "name": "Réunion 2",
+        "timeSlot" : "NINE_TEN",
+        "type" : "VC",
+        "employeesNumber" : 6
+    },
+    {
+        "name": "Réunion 3",
+        "timeSlot" : "ELEVEN_TWELVE",
+        "type" : "RC",
+        "employeesNumber" : 4
+    },
+     {
+        "name": "Réunion 4",
+        "timeSlot" : "ELEVEN_TWELVE",
+        "type" : "RS",
+        "employeesNumber" : 2
+    },
+    {
+        "name": "Réunion 5",
+        "timeSlot" : "ELEVEN_TWELVE",
+        "type" : "SPEC",
+        "employeesNumber" : 9
+    },
+    {
+        "name": "Réunion 6",
+        "timeSlot" : "NINE_TEN",
+        "type" : "RC",
+        "employeesNumber" : 7
+    },
+    {
+        "name": "Réunion 7",
+        "timeSlot" : "EIGHT_NINE",
+        "type" : "VC",
+        "employeesNumber" : 9
+    },
+    {
+        "name": "Réunion 8",
+        "timeSlot" : "EIGHT_NINE",
+        "type" : "SPEC",
+        "employeesNumber" : 10
+    },
+    {
+        "name": "Réunion 9",
+        "timeSlot" : "NINE_TEN",
+        "type" : "SPEC",
+        "employeesNumber" : 5
+    },
+    {
+        "name": "Réunion 10",
+        "timeSlot" : "NINE_TEN",
+        "type" : "RS",
+        "employeesNumber" : 4
+    },
+    {
+        "name": "Réunion 11",
+        "timeSlot" : "NINE_TEN",
+        "type" : "RC",
+        "employeesNumber" : 8
+    },
+    {
+        "name": "Réunion 12",
+        "timeSlot" : "ELEVEN_TWELVE",
+        "type" : "VC",
+        "employeesNumber" : 12
+    },
+    {
+        "name": "Réunion 13",
+        "timeSlot" : "ELEVEN_TWELVE",
+        "type" : "SPEC",
+        "employeesNumber" : 5
+    },
+    {
+        "name": "Réunion 14",
+        "timeSlot" : "EIGHT_NINE",
+        "type" : "VC",
+        "employeesNumber" : 3
+    },
+    {
+        "name": "Réunion 15",
+        "timeSlot" : "EIGHT_NINE",
+        "type" : "SPEC",
+        "employeesNumber" : 2
+    },
+    {
+        "name": "Réunion 16",
+        "timeSlot" : "EIGHT_NINE",
+        "type" : "VC",
+        "employeesNumber" : 12
+    },
+    {
+        "name": "Réunion 17",
+        "timeSlot" : "TEN_ELEVEN",
+        "type" : "VC",
+        "employeesNumber" : 6
+    },
+    {
+        "name": "Réunion 18",
+        "timeSlot" : "ELEVEN_TWELVE",
+        "type" : "RS",
+        "employeesNumber" : 2
+    },
+    {
+        "name": "Réunion 19",
+        "timeSlot" : "NINE_TEN",
+        "type" : "RS",
+        "employeesNumber" : 4
+    },
+    {
+        "name": "Réunion 20",
+        "timeSlot" : "NINE_TEN",
+        "type" : "RC",
+        "employeesNumber" : 7
+    }
+]
