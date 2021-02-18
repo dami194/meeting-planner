@@ -19,6 +19,11 @@ public class RoomBookResult {
         this.roomBookMessage = bookErrorMessage;
     }
 
+    // for deserialization
+    private RoomBookResult() {
+        this("default result");
+    }
+
     public Room getRoom() {
         return room;
     }

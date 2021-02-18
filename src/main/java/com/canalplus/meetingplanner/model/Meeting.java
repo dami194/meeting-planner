@@ -14,6 +14,11 @@ public class Meeting {
         this.employeesNumber = employeesNumber;
     }
 
+    // for deserialization
+    private Meeting() {
+        this("default meeting name", null, null, 0);
+    }
+
     public String getName() {
         return name;
     }

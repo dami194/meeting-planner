@@ -24,7 +24,7 @@ public class Room {
     }
 
     // for deserialization
-    public Room() {
+    private Room() {
         this("default name", 0);
     }
 
@@ -60,5 +60,18 @@ public class Room {
                 ", capacity=" + capacity +
                 ", equipments=" + equipments +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Room room = (Room) o;
+        return capacity == room.capacity && name.equals(room.name) && equipments.equals(room.equipments) && bookStatusByTimeSlot.equals(room.bookStatusByTimeSlot);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, capacity, equipments, bookStatusByTimeSlot);
     }
 }
