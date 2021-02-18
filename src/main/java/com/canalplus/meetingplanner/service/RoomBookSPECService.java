@@ -51,7 +51,7 @@ public class RoomBookSPECService {
         Optional<Room> potentiallyBookedRoom;
 
         // On cherche d'abord des salles ayant un tableau
-        potentiallyBookedRoom = roomFoundWithAll_SPEC_Equipments(availableRooms);
+        potentiallyBookedRoom = room_found_with_all_SPEC_equipments(availableRooms);
         if (potentiallyBookedRoom.isPresent()) {
             Room bookedRoom = potentiallyBookedRoom.get();
             bookedRoom.markAsBookedFor(meetingTimeSlot);
@@ -77,7 +77,7 @@ public class RoomBookSPECService {
         }
     }
 
-    private Optional<Room> roomFoundWithAll_SPEC_Equipments(List<Room> availableRooms) {
+    private Optional<Room> room_found_with_all_SPEC_equipments(List<Room> availableRooms) {
         return roomFinder
                 .findRoomsWithSpecifiedEquipments(availableRooms, Set.of(BOARD))
                 .stream()
