@@ -1,13 +1,13 @@
 package com.canalplus.meetingplanner.service;
 
+import com.canalplus.meetingplanner.model.Equipment;
 import com.canalplus.meetingplanner.model.Room;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import static com.canalplus.meetingplanner.model.Equipment.*;
 import static com.canalplus.meetingplanner.model.TimeSlot.*;
@@ -103,5 +103,83 @@ class RoomFinderTest {
         // Assert
         assertThat(roomsWithAtLeastScreenAndBoard).containsExactly(room3, room4);
         assertThat(roomsWithNoSpecificEquipment).containsExactly(room1, room2, room3, room4);
+    }
+
+    @Test
+    void should_rooms_with_some_equipments_be_found() {
+        // Setup
+        Room room1 = new Room("room1",4);
+        Room room2 = new Room("room2",2, Set.of(SCREEN));
+        Room room3 = new Room("room3",14, Set.of(SCREEN, BOARD));
+        Room room4 = new Room("room4",7, Set.of(SCREEN, BOARD, MULTILINE_SPEAKER));
+        List<Room> rooms = List.of(room1, room2, room3, room4);
+        List<Equipment> availableRemovableEquipments = Arrays.asList(WEBCAM, WEBCAM, BOARD, BOARD, BOARD, MULTILINE_SPEAKER);
+
+        // Test
+        Optional<Room> roomWithSomeEquipment = roomFinder.findRoom_with_someEquipment(rooms, Set.of(SCREEN, BOARD), WEBCAM, availableRemovableEquipments);
+
+        // Assert
+        assertThat(roomWithSomeEquipment).isPresent().hasValue(room3);
+    }
+
+    @Test
+    void should_rooms_with_some_equipments_not_be_found() {
+        // Setup
+        Room room1 = new Room("room1",4);
+        Room room2 = new Room("room2",2, Set.of(SCREEN));
+        Room room3 = new Room("room3",14, Set.of(SCREEN, BOARD));
+        Room room4 = new Room("room4",7, Set.of(SCREEN, BOARD, MULTILINE_SPEAKER));
+        List<Room> rooms = List.of(room1, room2, room3, room4);
+
+        // Test
+        Optional<Room> roomWithSomeEquipment = roomFinder.findRoom_with_someEquipment(rooms, Set.of(SCREEN, BOARD), WEBCAM, Collections.emptyList());
+
+        // Assert
+        assertThat(roomWithSomeEquipment).isNotPresent();
+
+        // Test
+        roomWithSomeEquipment = roomFinder.findRoom_with_someEquipment(rooms, Set.of(SCREEN, BOARD, WEBCAM), MULTILINE_SPEAKER, Collections.emptyList());
+
+        // Assert
+        assertThat(roomWithSomeEquipment).isNotPresent();
+    }
+
+    @Test
+    void should_rooms_with_one_equipment_be_found() {
+        // Setup
+        Room room1 = new Room("room1",4);
+        Room room2 = new Room("room2",2, Set.of(SCREEN));
+        Room room3 = new Room("room3",14, Set.of(SCREEN, BOARD));
+        Room room4 = new Room("room4",7, Set.of(SCREEN, BOARD, MULTILINE_SPEAKER));
+        List<Room> rooms = List.of(room1, room2, room3, room4);
+        List<Equipment> availableRemovableEquipments = Arrays.asList(WEBCAM, WEBCAM, BOARD, BOARD, BOARD, SCREEN);
+
+        // Test
+        Optional<Room> roomWithSomeEquipment = roomFinder.findRoom_with_oneEquipment(rooms, MULTILINE_SPEAKER, Set.of(SCREEN, BOARD), availableRemovableEquipments);
+
+        // Assert
+        assertThat(roomWithSomeEquipment).isPresent().hasValue(room4);
+    }
+
+    @Test
+    void should_rooms_with_one_equipment_not_be_found() {
+        // Setup
+        Room room1 = new Room("room1",4);
+        Room room2 = new Room("room2",2, Set.of(SCREEN));
+        Room room3 = new Room("room3",14, Set.of(SCREEN, BOARD));
+        Room room4 = new Room("room4",7, Set.of(SCREEN, BOARD, MULTILINE_SPEAKER));
+        List<Room> rooms = List.of(room1, room2, room3, room4);
+
+        // Test
+        Optional<Room> roomWithOneEquipment = roomFinder.findRoom_with_oneEquipment(rooms, WEBCAM, Set.of(BOARD, SCREEN), Collections.emptyList());
+
+        // Assert
+        assertThat(roomWithOneEquipment).isNotPresent();
+
+        // Test
+        roomWithOneEquipment = roomFinder.findRoom_with_oneEquipment(rooms, SCREEN, Set.of(BOARD, SCREEN), Collections.emptyList());
+
+        // Assert
+        assertThat(roomWithOneEquipment).isNotPresent();
     }
 }

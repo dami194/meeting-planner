@@ -127,5 +127,6 @@ class RoomBookSPECServiceTest {
         assertThat(roomBookResult.getRoom()).isEqualTo(room2);
         assertThat(room2.isBookedFor(meetingTimeSlot)).isTrue();
         assertThat(roomBookRepository.getAvailableRemovableEquipmentsFor(meetingTimeSlot)).hasSize(14);
+        assertThat(roomBookResult.getRemovableBorrowedEquipments()).isNotEmpty().containsExactly(BOARD);
     }
 }

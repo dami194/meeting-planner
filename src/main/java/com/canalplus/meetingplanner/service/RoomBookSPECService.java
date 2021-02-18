@@ -8,8 +8,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import static com.canalplus.meetingplanner.model.Equipment.BOARD;
 
@@ -48,32 +48,39 @@ public class RoomBookSPECService {
     }
 
     private RoomBookResult getRoomBookResultForSPECMeeting(TimeSlot meetingTimeSlot, List<Room> availableRooms) {
-        List<Room> availableRoomsWithBoard = roomFinder.findRoomsWithSpecifiedEquipments(availableRooms, Set.of(BOARD));
+        Optional<Room> potentiallyBookedRoom;
 
-        // On a trouvé une salle avec les équipements déjà présents : on prend la première
-        if (!availableRoomsWithBoard.isEmpty()) {
-            Room bookedRoom = getOrderedRoomsByEquipmentsNumber(availableRoomsWithBoard).get(0);
+        // On cherche d'abord des salles ayant un tableau
+        potentiallyBookedRoom = roomFoundWithAll_SPEC_Equipments(availableRooms);
+        if (potentiallyBookedRoom.isPresent()) {
+            Room bookedRoom = potentiallyBookedRoom.get();
             bookedRoom.markAsBookedFor(meetingTimeSlot);
-            return new RoomBookResult(bookedRoom);
+            return new RoomBookResult(bookedRoom, Set.of());
         }
 
-        // Sinon on va regarder les équipements amovibles disponibles pour ce créneau
+        // Sinon il ne reste que des salles sans aucun tableau (seul équipement nécessaire à une réunion RC)
+        // On va regarder les équipements amovibles disponibles pour ce créneau
         else {
             List<Equipment> availableRemovableEquipments = roomBookRepository.getAvailableRemovableEquipmentsFor(meetingTimeSlot);
             if (!availableRemovableEquipments.contains(BOARD)) {
-                return new RoomBookResult("Les équipements amovibles restants pour le créneau " + meetingTimeSlot + " ne contiennent pas de tableau");
+                return new RoomBookResult("Aucune salle restante à ce créneau ne contient de tableau" +
+                        ", et les équipements amovibles restants pour ce créneau ne contiennent pas non plus de tableau");
             }
 
             availableRemovableEquipments.remove(BOARD);
-            Room bookedRoom = getOrderedRoomsByEquipmentsNumber(availableRooms).get(0);
+            Room bookedRoom = availableRooms
+                    .stream()
+                    .min(Comparator.comparing(room -> room.getEquipments().size()))
+                    .get();
             bookedRoom.markAsBookedFor(meetingTimeSlot);
-            return new RoomBookResult(bookedRoom);
+            return new RoomBookResult(bookedRoom, Set.of(BOARD));
         }
     }
 
-    private List<Room> getOrderedRoomsByEquipmentsNumber(List<Room> rooms) {
-        return rooms.stream()
-                .sorted(Comparator.comparing(room -> room.getEquipments().size()))
-                .collect(Collectors.toList());
+    private Optional<Room> roomFoundWithAll_SPEC_Equipments(List<Room> availableRooms) {
+        return roomFinder
+                .findRoomsWithSpecifiedEquipments(availableRooms, Set.of(BOARD))
+                .stream()
+                .min(Comparator.comparing(room -> room.getEquipments().size()));
     }
 }

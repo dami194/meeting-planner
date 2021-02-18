@@ -17,6 +17,7 @@ import static com.canalplus.meetingplanner.model.Equipment.*;
 import static com.canalplus.meetingplanner.model.TimeSlot.EIGHT_NINE;
 import static com.canalplus.meetingplanner.model.TimeSlot.NINE_TEN;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 
@@ -81,7 +82,7 @@ class RoomBookVCServiceTest {
     }
 
     @Test
-    void cannot_book_room_for_VC_meeting_when_no_room_with_VC_equipments_and_no_available_removable_VC_equipments() {
+    void cannot_book_room_for_VC_meeting_when_no_room_with_any_of_VC_equipments_and_no_available_removable_VC_equipments() {
         // Setup
         TimeSlot meetingTimeSlot = NINE_TEN;
         int meetingEmployeesNumber = 5;
@@ -93,6 +94,8 @@ class RoomBookVCServiceTest {
         when(roomBookRepository.getRooms()).thenReturn(rooms);
         when(roomFinder.findAvailableRooms(rooms, meetingTimeSlot, meetingEmployeesNumber)).thenReturn(rooms);
         when(roomFinder.findRoomsWithSpecifiedEquipments(rooms, Set.of(SCREEN, MULTILINE_SPEAKER, WEBCAM))).thenReturn(Collections.emptyList());
+        when(roomFinder.findRoom_with_someEquipment(anyList(), anySet(), any(Equipment.class), anyList())).thenReturn(Optional.empty());
+        when(roomFinder.findRoom_with_oneEquipment(anyList(), any(Equipment.class), anySet(), anyList())).thenReturn(Optional.empty());
         roomBookRepository.getAvailableRemovableEquipmentsFor(meetingTimeSlot).removeIf(
                 equipment -> (equipment == SCREEN) || equipment == MULTILINE_SPEAKER || equipment == WEBCAM);
 
@@ -106,7 +109,7 @@ class RoomBookVCServiceTest {
     }
 
     @Test
-    void room_booked_for_VC_meeting_when_no_room_with_VC_equipments_and_available_removable_VC_equipments() {
+    void room_booked_for_VC_meeting_when_no_room_with_any_of_VC_equipments_and_available_removable_VC_equipments() {
         // Setup
         TimeSlot meetingTimeSlot = NINE_TEN;
         int meetingEmployeesNumber = 5;
@@ -118,6 +121,8 @@ class RoomBookVCServiceTest {
         when(roomBookRepository.getRooms()).thenReturn(rooms);
         when(roomFinder.findAvailableRooms(rooms, meetingTimeSlot, meetingEmployeesNumber)).thenReturn(rooms);
         when(roomFinder.findRoomsWithSpecifiedEquipments(rooms, Set.of(SCREEN, MULTILINE_SPEAKER, WEBCAM))).thenReturn(Collections.emptyList());
+        when(roomFinder.findRoom_with_someEquipment(anyList(), anySet(), any(Equipment.class), anyList())).thenReturn(Optional.empty());
+        when(roomFinder.findRoom_with_oneEquipment(anyList(), any(Equipment.class), anySet(), anyList())).thenReturn(Optional.empty());
 
         // Test
         Meeting meeting = new Meeting("réunion", meetingTimeSlot, MeetingType.VC, meetingEmployeesNumber);
@@ -128,5 +133,6 @@ class RoomBookVCServiceTest {
         assertThat(roomBookResult.getRoom()).isEqualTo(room2);
         assertThat(room2.isBookedFor(meetingTimeSlot)).isTrue();
         assertThat(roomBookRepository.getAvailableRemovableEquipmentsFor(meetingTimeSlot)).hasSize(12);
+        assertThat(roomBookResult.getRemovableBorrowedEquipments()).isNotEmpty().containsExactlyInAnyOrder(SCREEN, MULTILINE_SPEAKER, WEBCAM);
     }
 }

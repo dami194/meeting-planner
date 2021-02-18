@@ -1,14 +1,17 @@
 package com.canalplus.meetingplanner.service;
 
 import com.canalplus.meetingplanner.exceptions.NoAvailableRoomException;
-import com.canalplus.meetingplanner.model.*;
+import com.canalplus.meetingplanner.model.Meeting;
+import com.canalplus.meetingplanner.model.Room;
+import com.canalplus.meetingplanner.model.RoomBookResult;
+import com.canalplus.meetingplanner.model.TimeSlot;
 import com.canalplus.meetingplanner.repository.RoomBookRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Set;
 
 /**
  * Service permettant de réserver une salle pour une réunion simple (type "RS")
@@ -43,14 +46,11 @@ public class RoomBookRSService {
     }
 
     private RoomBookResult getRoomBookResultForRSMeeting(TimeSlot meetingTimeSlot, List<Room> availableRooms) {
-        Room bookedRoom = getOrderedRoomsByEquipmentsNumber(availableRooms).get(0);
+        Room bookedRoom = availableRooms
+                .stream()
+                .min(Comparator.comparing(room -> room.getEquipments().size()))
+                .get();
         bookedRoom.markAsBookedFor(meetingTimeSlot);
-        return new RoomBookResult(bookedRoom);
-    }
-
-    private List<Room> getOrderedRoomsByEquipmentsNumber(List<Room> rooms) {
-        return rooms.stream()
-                .sorted(Comparator.comparing(room -> room.getEquipments().size()))
-                .collect(Collectors.toList());
+        return new RoomBookResult(bookedRoom, Set.of());
     }
 }
