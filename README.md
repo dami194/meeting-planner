@@ -33,7 +33,7 @@ Pour résumer, une salle peut être réservée pour une réunion à un certain c
 - elle est libre à ce créneau
 - elle était libre au créneau précédent
 - elle est assez grande pour accueillir le nombre de personnes attendues
-- elle dispose des équipements prévus pour le type de réunion ou des équipements amovibles nécessaires sont disponibles
+- elle dispose des équipements prévus pour le type de réunion ou des équipements amovibles nécessaires sont disponibles à ce créneau
 
 **Le but de l'API est de pouvoir réserver une ou des réunions en leur attribuant à chacune la meilleure salle adéquate**.
 
