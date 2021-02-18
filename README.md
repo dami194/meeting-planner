@@ -1,8 +1,10 @@
 # Meeting Planner
 Gestionnaire des salles de réunion d'une PME, via une API REST en Java.
 
-Une petite entreprise compte mettre en place un utilitaire pour la gestion de ses salles qui devient trop complexe durant le COVID.
-Les locaux de l'entreprise comptent 12 salles qui peuvent être utilisées pour des réunions. Chaque salle a un nom, une capacité en nombre de places et une liste d'équipements.
+Une petite entreprise compte mettre en place un utilitaire pour la gestion de ses salles qui devient trop complexe durant le COVID.  
+Les locaux de l'entreprise comptent 12 salles qui peuvent être utilisées pour des réunions.  
+Chaque salle a un nom, une capacité en nombre de places et une liste d'équipements.  
+
 Il y a quatre types d'équipements : écran, tableau, pieuvre et webcam. Une salle contient au maximum un équipement de chaque type.
 Chacune de ces salles peut être réservée pour une réunion à chacun des créneaux de réservation disponibles. Ces créneaux vont de 8h-9h à 19h-20h (sans interruption).
 
@@ -39,3 +41,33 @@ Pour résumer, une salle peut être réservée pour une réunion à un certain c
 
 ## Lancement et utilisation de l'API
 
+Il s'agit d'une API REST développée en Java à l'aide de Spring Boot.
+
+### Lancement
+
+1) Télécharger le Zip du projet ou le cloner
+2) Builder le projet : ouvrir un terminal et lancer la commande `mvn install` à la racine du projet
+3) Pour lancer l'application, plusieurs choix s'offrent à vous : 
+    - A l'aide de maven : taper la commande `mvn spring-boot:run` à la racine du projet
+    - A l'aide d'un JDK : taper la commande `java -jar target/meeting-planner-0.0.1-SNAPSHOT.jar` à la racine du projet
+    - A l'aide d'un IDE : ouvrir le projet dans un IDE et lancer la classe `MeetingPlannerApplication` en tant qu'application Java
+
+### Utilisation
+
+L'application ne comporte pas de front. Elle dispose cependant de plusieurs endpoints : 
+
+- "/rooms" : pour consulter la liste des salles (GET)
+- "/bookRoom" : pour réserver une réunion (POST)
+- "/bookRooms" : pour réserver un ensemble de réunions (POST)
+
+Un exemple de requête pour /bookRooms se situe dans src/test/resources du projet. Les créneaux sont de la forme "EIGHT_NINE" (pour 8h-9h).
+
+## Idées d'amélioration
+
+- Sauvegarder les réunions planifiées, pour pouvoir consulter les salles réservées et réunions planifiées par créneau
+- Faire une IHM pour afficher un semainier avec les réunions déjà planifiées et les créneaux encore disponibles
+
+## Note sur l'algorithme de choix de salle
+
+Si plusieurs salles remplissent tous les critères de réservation (disponibilité, capacité, équipement), l'algorithme choisit en priorité la salle avec le moins d'équipement, plutôt que la salle avec le moins de capacité.
+Par exemple : si une réunion de type SPEC (nécessitant seulement un tableau) peut se faire dans deux salles, une salle A avec un tableau et une capacité de 15 et une salle B avec un tableau, une webcam, un écran et une capacité de 5, la salle A sera choisie.
