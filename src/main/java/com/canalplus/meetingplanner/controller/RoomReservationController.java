@@ -44,11 +44,6 @@ public class RoomReservationController {
         return roomBookRepository.getRooms();
     }
 
-    @GetMapping(value="/rooms/{roomName}")
-    public Room getRoom(@PathVariable String roomName) {
-        return roomBookRepository.getRooms().stream().filter(room -> room.getName().equals(roomName)).findFirst().orElseThrow();
-    }
-
     @PostMapping(value="/bookRoom")
     public Meeting bookARoom(@RequestBody Meeting meeting) {
         MeetingType meetingType = meeting.getType();
