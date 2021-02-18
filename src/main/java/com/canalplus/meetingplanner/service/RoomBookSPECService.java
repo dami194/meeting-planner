@@ -58,7 +58,7 @@ public class RoomBookSPECService {
             return new RoomBookResult(bookedRoom, Set.of());
         }
 
-        // Sinon il ne reste que des salles sans aucun tableau (seul équipement nécessaire à une réunion RC)
+        // Sinon il ne reste que des salles sans aucun tableau (seul équipement nécessaire à une réunion SPEC)
         // On va regarder les équipements amovibles disponibles pour ce créneau
         else {
             List<Equipment> availableRemovableEquipments = roomBookRepository.getAvailableRemovableEquipmentsFor(meetingTimeSlot);
