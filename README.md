@@ -41,7 +41,8 @@ Pour résumer, une salle peut être réservée pour une réunion à un certain c
 
 ## Lancement et utilisation de l'API
 
-Il s'agit d'une API REST développée en Java à l'aide de Spring Boot.
+Il s'agit d'une API REST développée en Java à l'aide de Spring Boot.  
+Pré-requis : avoir sur son poste maven 3 et un JDK 11. Vérifier que la variable JAVA_HOME pointe vers ce JDK 11.
 
 ### Lancement
 
