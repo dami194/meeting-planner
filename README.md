@@ -67,6 +67,7 @@ Un exemple de requête pour /bookRooms se situe dans src/test/resources du proje
 
 - Sauvegarder les réunions planifiées, pour pouvoir consulter les salles réservées et réunions planifiées par créneau
 - Faire une IHM pour afficher un semainier avec les réunions déjà planifiées et les créneaux encore disponibles
+- Intégrer une documentation pour l'API REST (Swagger, Open API...)
 - Côté technique, améliorer la couverture des TU (notamment les tests d'intégration du controller et des services)
 
 ## Note sur l'algorithme de choix de salle
