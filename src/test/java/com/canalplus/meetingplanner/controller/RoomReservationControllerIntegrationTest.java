@@ -51,6 +51,10 @@ class RoomReservationControllerIntegrationTest {
     @Qualifier(value = "E2003")
     private Room roomE2003;
 
+    @Autowired
+    @Qualifier(value = "E1001")
+    private Room roomE1001;
+
     @Test
     void should_getRooms_return_all_rooms() throws Exception {
         MvcResult mvcResult = mvc.perform(get("/rooms")
@@ -76,11 +80,6 @@ class RoomReservationControllerIntegrationTest {
     }
 
     @Test
-    void should_getRoom_return_wanted_room() throws Exception {
-       assertThat(getRoom("E2003")).isEqualTo(roomE2003);
-    }
-
-    @Test
     void should_RS_meeting_be_booked() throws Exception {
         MvcResult mvcResult = mvc.perform(post("/bookRoom")
                 .content(new ObjectMapper().writeValueAsString(new Meeting("réunion 1", TimeSlot.EIGHT_NINE, MeetingType.RS, 5)))
@@ -92,15 +91,6 @@ class RoomReservationControllerIntegrationTest {
 
         assertThat(meetingResult.getBookedRoomResult()).isNotNull();
         assertThat(meetingResult.getBookedRoomResult().getRoomBookStatus()).isEqualTo(RoomBookStatus.SUCCESS);
-        assertThat(meetingResult.getBookedRoomResult().getRoom()).isEqualTo(getRoom("E1001"));
-    }
-
-    private Room getRoom(String roomName) throws Exception {
-        MvcResult mvcResult = mvc.perform(get("/rooms/{roomName}", roomName)
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk()).andReturn();
-
-        String json = mvcResult.getResponse().getContentAsString();
-        return new ObjectMapper().readValue(json, Room.class);
+        assertThat(meetingResult.getBookedRoomResult().getRoom()).isEqualTo(roomE1001);
     }
 }

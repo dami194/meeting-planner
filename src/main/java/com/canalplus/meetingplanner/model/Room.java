@@ -67,7 +67,7 @@ public class Room {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Room room = (Room) o;
-        return capacity == room.capacity && name.equals(room.name) && equipments.equals(room.equipments) && bookStatusByTimeSlot.equals(room.bookStatusByTimeSlot);
+        return capacity == room.capacity && name.equals(room.name) && equipments.equals(room.equipments);
     }
 
     @Override
